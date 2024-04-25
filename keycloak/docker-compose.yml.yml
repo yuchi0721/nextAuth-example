@@ -1,0 +1,62 @@
+# version: '3.7'
+# services:
+#   keycloak:
+#     image: jboss/keycloak:latest
+#     container_name: keycloak_tls
+#     restart: always
+#     ports:
+#       # - 8080:8080
+#       - 127.1.0.1:443:8443
+
+#     volumes:
+#       - C:\develop\Docker\keycloak\localdata\:/opt/jboss/keycloak/standalone/data
+#       - C:\develop\certificates\keycloak.codewrecks.com\cert.pem:/etc/x509/https/tls.crt
+#       - C:\develop\certificates\keycloak.codewrecks.com\privkey.pem:/etc/x509/https/tls.key
+
+#     environment:
+#       - KEYCLOAK_USER=admin
+version: '3.7'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    ports:
+      - 8080:8080 # Listen to HTTP on host port 80 and forward to keycloak on 8080
+      - 8443:8443 # Listen to HTTPS on host port 443 and forward to keycloak on 8443
+
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_HTTPS_CERTIFICATE_FILE=/etc/x509/https/tls.crt
+      - KC_HTTPS_CERTIFICATE_KEY_FILE=/etc/x509/https/tls.key
+
+    volumes:
+      - ./keycloak.crt:/etc/x509/https/tls.crt
+      - ./keycloak.key:/etc/x509/https/tls.key
+
+    command:
+      - start-dev
+# version: '3.7'
+
+# services:
+#   keycloak:
+#      image: quay.io/keycloak/keycloak:latest
+#      container_name: keycloak
+#      restart: always
+#      ports:
+#       - 80:8080 # Listen to HTTP on host port 80 and forward to keycloak on 8080
+#       - 443:8443 # Listen to HTTPS on host port 443 and forward to keycloak on 8443
+
+#      volumes:
+#        - "./keycloak.crt"   # Map certificate to container
+#        - "./keycloak.key"   # Map private key to container
+
+#      environment:
+#        #- JAVA_OPTS_APPEND="-D keycloak.profile.feature.upload_script=enabled"
+#        - ADMIN_USER=admin # Change the username!
+#        - ADMIN_PASSWORD=admin # Change the password!
+#        - KC_HOSTNAME=fqdn # Set the hostname here
+#        - KC_HTTPS_CERTIFICATE_FILE=/etc/x509/https/tls.crt
+#        - KC_HTTPS_CERTIFICATE_KEY_FILE=/etc/x509/https/tls.key
+#     command:
+#        - start-dev # Start Keycloak in developer mode
